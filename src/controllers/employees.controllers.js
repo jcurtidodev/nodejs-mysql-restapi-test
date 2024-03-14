@@ -14,15 +14,31 @@ export const getEmployees = async (req, res) => {
   }
 }
 
-export const getEmployeeByName = async (req, res) => {
+export const getEmployeeById = async (req, res) => {
   try {
-    const employeeName = req.body.name
-    const [rows] = await pool.query('SELECT * FROM employee WHERE name = ?', employeeName)
+    const employeeId = parseInt(req.params.id)
+    const [rows] = await pool.query('SELECT * FROM employee WHERE id = ?', [employeeId])
     
     if (rows.length === 0)
       return res.status(404).send({ message: 'The user could not be found'})
 
-    res.send({ Employees: rows })
+    res.json(rows[0])
+    
+  } catch (err) {
+    console.error('Error retrieving employee: ', err)
+    res.status(500).send({ message: 'An error ocurred while fetching the employee data' })
+  }
+}
+
+export const getEmployeeByName = async (req, res) => {
+  try {
+    const employeeName = req.params.name
+    const [rows] = await pool.query('SELECT * FROM employee WHERE name = ?', [employeeName])
+    
+    if (rows.length === 0)
+      return res.status(404).send({ message: 'The user could not be found'})
+
+    res.json(rows)
     
   } catch (err) {
     console.error('Error retrieving employee: ', err)
@@ -47,4 +63,17 @@ export const createEmployee = async (req, res) => {
 
 export const updateEmployee = (req, res) => res.send('Updating employees')
 
-export const deleteEmployee = (req, res) => res.send('Deleting employees')
+export const deleteEmployee = async (req, res) => {
+  try {
+    const employeeId = req.params.id
+    const [result] = await pool.query('DELETE FROM employee WHERE id = ?', [employeeId])
+
+    if (result.affectedRows <= 0)
+      return res.status(404).send({ message: 'The user could not be found'})
+
+    res.sendStatus(204)
+  } catch (err) {
+    console.error('Error deleting employee: ', err)
+    res.status(500).send({ message: 'An error ocurred while deleting the employee' })
+  }
+}
