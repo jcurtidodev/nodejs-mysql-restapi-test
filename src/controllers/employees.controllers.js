@@ -20,7 +20,7 @@ export const getEmployeeById = async (req, res) => {
     const [rows] = await pool.query('SELECT * FROM employee WHERE id = ?', [employeeId])
     
     if (rows.length === 0)
-      return res.status(404).send({ message: 'The user could not be found'})
+      return res.status(404).send({ message: 'The user can not be found'})
 
     res.json(rows[0])
     
@@ -61,7 +61,30 @@ export const createEmployee = async (req, res) => {
   }
 }
 
-export const updateEmployee = (req, res) => res.send('Updating employees')
+export const updateEmployee = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { name, salary } = req.body
+
+    const [rows] = await pool.query('UPDATE employee SET name = IFNULL(?, name), salary = IFNULL(?, salary) WHERE id=?',
+    [ name, salary, id])
+
+    console.log(rows)
+    if (rows.affectedRows === 0)
+      return res.status(404).json({
+        message: 'Employee not found'
+      })
+
+    if (rows.changedRows === 1) {
+      const [response] = await pool.query('SELECT * FROM employee WHERE id=?', id)
+      res.json(response[0])
+    } else
+      res.send('Can not update with the same values')
+  } catch (err) {
+    console.error('Error updating employee: ', err)
+    res.status(500).send({ message: 'An error ocurred while updating the employee' })
+  }
+}
 
 export const deleteEmployee = async (req, res) => {
   try {
