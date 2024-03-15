@@ -10,7 +10,7 @@ export const getEmployees = async (req, res) => {
     res.json(rows)
   } catch (err) {
     console.error('Error retrieving employee: ', err)
-    res.status(500).send({ message: 'An error ocurred while fetching the employee data' })
+    res.status(500).json({ message: 'An error ocurred while fetching the employee data' })
   }
 }
 
@@ -26,7 +26,7 @@ export const getEmployeeById = async (req, res) => {
     
   } catch (err) {
     console.error('Error retrieving employee: ', err)
-    res.status(500).send({ message: 'An error ocurred while fetching the employee data' })
+    res.status(500).json({ message: 'An error ocurred while fetching the employee data' })
   }
 }
 
@@ -42,7 +42,7 @@ export const getEmployeeByName = async (req, res) => {
     
   } catch (err) {
     console.error('Error retrieving employee: ', err)
-    res.status(500).send({ message: 'An error ocurred while fetching the employee data' })
+    res.status(500).json({ message: 'An error ocurred while fetching the employee data' })
   }
 }
 
@@ -57,7 +57,7 @@ export const createEmployee = async (req, res) => {
     })
   } catch (err) {
     console.error('Error creating employee: ', err)
-    res.status(500).send({ message: 'An error ocurred while creating the employee' })
+    res.status(500).json({ message: 'An error ocurred while creating the employee' })
   }
 }
 
@@ -82,7 +82,7 @@ export const updateEmployee = async (req, res) => {
       res.send('Can not update with the same values')
   } catch (err) {
     console.error('Error updating employee: ', err)
-    res.status(500).send({ message: 'An error ocurred while updating the employee' })
+    res.status(500).json({ message: 'An error ocurred while updating the employee' })
   }
 }
 
@@ -97,6 +97,6 @@ export const deleteEmployee = async (req, res) => {
     res.sendStatus(204)
   } catch (err) {
     console.error('Error deleting employee: ', err)
-    res.status(500).send({ message: 'An error ocurred while deleting the employee' })
+    res.status(500).json({ message: 'An error ocurred while deleting the employee' })
   }
 }
